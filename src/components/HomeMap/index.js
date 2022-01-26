@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, Image} from 'react-native';
 import React from 'react';
 
 export default function HomeMap() {
@@ -10,7 +10,12 @@ export default function HomeMap() {
         justifyContent: 'center',
         alignItems: 'center',
       }}>
-      <Text>I am a map</Text>
+      <Image
+        source={{
+          uri: 'https://www.lifewire.com/thmb/phcmvK4ZGtg_BfdztEWJ5uvtPpk=/768x768/smart/filters:no_upscale()/schedule-uber-in-advance.01-5bfc595146e0fb002614ed1b.jpg',
+        }}
+        style={{width: '100%', height: '100%'}}
+      />
     </View>
   );
 }

@@ -24,10 +24,32 @@ const styles = StyleSheet.create({
     borderRadius: 50,
     paddingLeft: 12,
   },
-  previousDestination: {},
-  pdIconContainer: {},
-  destinationTextTitle: {},
-  destinationTextAddress: {},
+  previousDestination: {
+    margin: 10,
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    paddingBottom: 14,
+    borderColor: '#E2E2E2',
+  },
+  pdIconContainer: {
+    marginEnd: 20,
+    marginStart: 10,
+  },
+  addressContainer: {
+    flexDirection: 'column',
+    flexWrap: 'nowrap',
+    flexShrink: 1,
+  },
+  destinationTextTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    paddingBottom: 5,
+  },
+  destinationTextAddress: {
+    flexWrap: 'wrap',
+    lineHeight: 18,
+  },
 });
 
 export default styles;

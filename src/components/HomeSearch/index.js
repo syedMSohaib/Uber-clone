@@ -1,4 +1,4 @@
-import {View, Text} from 'react-native';
+import {View, Text, ScrollView} from 'react-native';
 import React from 'react';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
@@ -24,16 +24,27 @@ export default function index() {
         </View>
       </View>
       {/* Previous destinatiob */}
-      <View style={styles.previousDestination}>
-        <View style={styles.pdIconContainer}>
-          <AntDesignIcon name="clockcircle" size={20} color="#545454" />
-        </View>
-        <Text style={styles.destinationTextTitle}>Anum Estate Building</Text>
-        <Text style={styles.destinationTextAddress}>
-          Shahrah-e-Faisal, Karachi Memon Co-operative Housing Society Umar
-          Colony, Karachi, Karachi City, Sindh 75530
-        </Text>
-      </View>
+      <ScrollView>
+        {[...Array(5).keys()].map(item => {
+          return (
+            <View key={item} style={styles.previousDestination}>
+              <View style={styles.pdIconContainer}>
+                <AntDesignIcon name="clockcircle" size={30} color="#545454" />
+              </View>
+              <View style={styles.addressContainer}>
+                <Text style={styles.destinationTextTitle}>
+                  Anum Estate Building
+                </Text>
+                <Text style={styles.destinationTextAddress}>
+                  Shahrah-e-Faisal, Karachi Memon Co-operative Housing Society
+                  Umar Colony, Karachi, Karachi City, Sindh 75530
+                </Text>
+              </View>
+            </View>
+          );
+        })}
+      </ScrollView>
+
       {/* Home Destination */}
     </View>
   );
