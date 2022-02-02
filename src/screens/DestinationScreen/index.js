@@ -5,14 +5,16 @@ import {
   ScrollView,
   Image,
   TextInput,
+  Dimensions,
 } from 'react-native';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import AntDesignIcon from 'react-native-vector-icons/AntDesign';
 import EntypoIcon from 'react-native-vector-icons/Entypo';
 import FontAwesome5Icon from 'react-native-vector-icons/FontAwesome5';
 import LinearGradient from 'react-native-linear-gradient';
-
-import React, {useState} from 'react';
+import Config from 'react-native-config';
+import {debounce} from 'lodash';
+import React, {useState, useCallback} from 'react';
 import styles from './style';
 
 // Images
@@ -22,16 +24,43 @@ const SAVEDLOCATION = require('../../assets/images/saved.jpg');
 const LOCATION = require('../../assets/images/location.jpg');
 const PINLOCATION = require('../../assets/images/pin.jpg');
 
-const GOOGLE_PLACE_API_KEY = 'AIzaSyCxHI_QFEYAa8ldWjRAGu4NfMdODBpT3N8';
+const GOOGLE_PLACE_API_KEY = Config.GOOGLE_PLACE_API_KEY;
+const GOOGLE_PACES_API_BASE_URL = 'https://maps.googleapis.com/maps/api/place';
 
 export default function index() {
   const [fromLocation, setFromLocation] = useState('');
   const [toLocation, setToLocation] = useState('');
 
+  const changeHandler = useCallback(
+    debounce(text => findPlaces(text), 700),
+    [],
+  );
+
+  const findPlaces = async text => {
+    console.log(text);
+    if (text.trim() === '') return;
+
+    const apiUrl = `${GOOGLE_PACES_API_BASE_URL}/autocomplete/json?key=${GOOGLE_PLACE_API_KEY}&input=${text}`;
+    console.log(apiUrl);
+
+    try {
+      const result = await axios.request({
+        method: 'get',
+        url: apiUrl,
+      });
+      if (result) {
+        console.log(result);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
+
   return (
     <SafeAreaView>
       {/* Header Sectiom */}
-
+      <Text>{GOOGLE_PLACE_API_KEY}</Text>
+      <Text>AIzaSyBWU9HrMQUigxX7_ry_HpHNvEdn_Vve4DI</Text>
       <View style={styles.headerTopContainer}>
         <AntDesignIcon
           style={styles.backIcon}
@@ -43,7 +72,6 @@ export default function index() {
           <EntypoIcon name="chevron-down" size={20}></EntypoIcon>
         </View>
       </View>
-
       <View style={styles.headerBottomContainer}>
         {/* Bullets at left side */}
 
@@ -56,49 +84,21 @@ export default function index() {
 
         {/* Input from and to text field */}
         <View style={styles.inputContainer}>
-          <GooglePlacesAutocomplete
-            placeholder="Current location"
-            fetchDetails={true}
-            styles={{
-              textInput: styles.textInputFrom,
-              container: styles.autocompleteContainer,
-              listView: styles.listView,
-              separator: styles.separator,
-            }}
-            textInputProps={{
-              placeholderTextColor: '#4682F3',
-            }}
-            onPress={(data, details = null) => {
-              // 'details' is provided when fetchDetails = true
-              console.log(data, details);
-              setFromLocation({data, details});
-            }}
-            query={{
-              key: GOOGLE_PLACE_API_KEY,
-              language: 'en',
-            }}
+          <TextInput
+            style={styles.textInputFrom}
+            placeholder="Current Location"
+            placeholderTextColor="#4682F3"
+            value={fromLocation}
+            // onChangeText={text => changeText}
+            returnKeyType="search"
           />
 
-          <GooglePlacesAutocomplete
+          <TextInput
+            style={styles.textInputTo}
             placeholder="Where to?"
-            fetchDetails={true}
-            styles={{
-              textInput: styles.textInputTo,
-              container: {
-                ...styles.autocompleteContainer,
-                top: 50,
-              },
-              separator: styles.separator,
-            }}
-            onPress={(data, details = null) => {
-              // 'details' is provided when fetchDetails = true
-              console.log(data, details);
-              // setToLocation({data, details});
-            }}
-            query={{
-              key: GOOGLE_PLACE_API_KEY,
-              language: 'en',
-            }}
+            placeholderTextColor="#000"
+            onChangeText={text => changeHandler(text)}
+            returnKeyType="search"
           />
         </View>
 
@@ -110,7 +110,6 @@ export default function index() {
             size={40}></EntypoIcon>
         </View>
       </View>
-
       {/* Saved Place */}
       <LinearGradient
         colors={['#E5E5E5', '#F1F1F1', '#FCFCFC', '#FFF']}
@@ -126,7 +125,6 @@ export default function index() {
             size={20}></EntypoIcon>
         </View>
       </LinearGradient>
-
       <View style={{backgroundColor: '#EDEDED'}}>
         <ScrollView style={{backgroundColor: '#fff'}}>
           {[...Array(5).keys()].map(item => {
@@ -136,8 +134,6 @@ export default function index() {
                   <Image
                     style={styles.savedPlaceLeftIcon}
                     source={LOCATION}></Image>
-
-                  {/* <AntDesignIcon name="clockcircle" size={30} color="#545454" /> */}
                 </View>
                 <View style={styles.addressContainer}>
                   <Text style={styles.destinationTextTitle}>
